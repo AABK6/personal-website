@@ -40,7 +40,7 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           <Link href="/" className="text-xl font-headline font-bold text-primary">
-            The Abecassis Lab
+            The Abecassis Lab / Field Notes
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
@@ -68,7 +68,7 @@ export default function Header() {
               <SheetContent side="right" className="w-full max-w-xs bg-card p-6">
                 <div className="flex flex-col space-y-6">
                   <Link href="/" className="text-xl font-headline font-bold text-primary" onClick={() => setOpen(false)}>
-                    The Abecassis Lab
+                    The Abecassis Lab / Field Notes
                   </Link>
                   <nav className="flex flex-col space-y-4">
                     {navItems.map((item) => (

@@ -7,8 +7,8 @@ export default function Landing() {
     <section id="home" className="relative h-screen flex items-center justify-center text-center text-foreground bg-cover bg-center" style={{backgroundImage: "url('https://placehold.co/1920x1080/fff7e6/ff8c00?text=.')"}} data-ai-hint="abstract orange">
         <div className="absolute inset-0 bg-background/60 backdrop-blur-sm"></div>
         <div className="relative container mx-auto px-4 z-10">
-            <h1 className="text-5xl md:text-7xl font-headline mb-6 text-primary animate-fade-in-down">
-                Field Notes / The Abecassis Lab
+            <h1 className="text-4xl md:text-6xl font-headline mb-6 text-primary animate-fade-in-down">
+                Field Notes
             </h1>
             <div className="max-w-3xl mx-auto animate-fade-in-up">
                 <div className="text-lg md:text-xl text-foreground/80 space-y-4">
