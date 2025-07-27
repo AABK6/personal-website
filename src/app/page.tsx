@@ -70,7 +70,7 @@ export default function Home() {
             </div>
         </section>
 
-        <section id="lab-rules" className="py-12 md:py-16 bg-background">
+        <section id="lab-rules" className="py-12 md:py-16 bg-secondary">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-2xl font-headline text-muted-foreground mb-4 text-center">Lab Rules</h2>
