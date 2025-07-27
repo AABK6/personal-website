@@ -24,6 +24,12 @@ export default function Landing() {
                     <ArrowDown className="ml-2 h-5 w-5"/>
                 </Button>
             </Link>
+            <div className="mt-8 animate-fade-in-up animation-delay-[600ms]">
+                <h4 className="font-headline text-xl text-primary mb-2">A small disclaimer</h4>
+                <p className="text-foreground/80 italic max-w-2xl mx-auto">
+                This site is a perpetual beta. Things may flicker, break, or contradict last week’s post. That’s research. The views are my own; the bugs belong to the repo.
+                </p>
+            </div>
         </div>
     </section>
   );

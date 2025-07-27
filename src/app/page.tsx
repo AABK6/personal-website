@@ -83,13 +83,6 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <Separator className="my-8 bg-border" />
-              <div>
-                  <h4 className="font-headline text-xl text-primary mb-2">A small disclaimer</h4>
-                  <p className="text-foreground/80 italic">
-                    This site is a perpetual beta. Things may flicker, break, or contradict last week’s post. That’s research. The views are my own; the bugs belong to the repo.
-                  </p>
-              </div>
             </div>
           </div>
         </section>
