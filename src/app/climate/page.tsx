@@ -6,7 +6,7 @@ export default function ClimatePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-1">
+      <main>
         <Climate />
       </main>
       <Footer />
