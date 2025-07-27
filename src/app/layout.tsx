@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: "Practitioner's Notebook",
+  title: "The Abecassis Lab",
   description: 'A collection of thoughts on AI, climate, democracy, and more.',
 };
 

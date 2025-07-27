@@ -8,14 +8,14 @@ export default function Landing() {
         <div className="absolute inset-0 bg-background/60 backdrop-blur-sm"></div>
         <div className="relative container mx-auto px-4 z-10">
             <h1 className="text-5xl md:text-7xl font-headline mb-6 text-primary animate-fade-in-down">
-                Field Notes / The Abecassis Lab
+                The Abecassis Lab
             </h1>
             <div className="max-w-3xl mx-auto animate-fade-in-up">
-                <p className="text-xl md:text-2xl text-foreground/80 mb-4">
-                    “I’m Adrien Abecassis—diplomat-turned-tinkerer.”
-                </p>
-                <p className="text-lg md:text-xl text-foreground/70">
-                    When treaties turn vague and PowerPoint turns grey, I open a fresh terminal, sharpen the pencils, and run little experiments on the big questions. Welcome to my lab-slash-field-journal: a place where policy memos share a bench with prototype code, and where failure is logged right next to the findings.
+                <p className="text-lg md:text-xl text-foreground/80 space-y-4">
+                    My career has taken a few turns—from career diplomat and party politics wonk to academic and climate geek. This website is an attempt to connect those dots. It’s a repository for the side-projects and stray thoughts that don't fit neatly into a single job title.
+                    <br />
+                    <br />
+                    It is also, quite literally, a lab: a project where I code and test things. As such, consider it a permanent work in progress, reflecting a rather eclectic profile.
                 </p>
             </div>
             <Link href="#why-it-exists" passHref>
