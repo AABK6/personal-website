@@ -26,7 +26,7 @@ export default function Home() {
               <h2 className="text-3xl md:text-4xl font-headline text-primary mb-6">Why This Exists</h2>
               <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
                   <p>
-                    After two decades shuttling between presidential palaces, UN halls, university libraries, and the occasional hack-day basement, I’ve found only one reliable method for learning: write things down, build prototypes, and see where they break. This website is the public notebook for that process—miscalculations and findings included.
+                    During two decades shuttling between presidential palaces, UN halls, university libraries, and the occasional hack-day basement, I’ve found one constant: I learn faster when I write things down, build models, fail, and see where they break. This website is the public notebook for that process—miscalculations and findings included.
                   </p>
                   <p className="text-base italic text-muted-foreground pt-4">
                     <strong className="text-primary">A small disclaimer:</strong> this site is a perpetual beta. Things may flicker, break, or contradict last week’s post. That’s research. The views are my own; the bugs belong to the repo.
