@@ -9,7 +9,7 @@ export default function About() {
           <div className="md:col-span-2">
             <Card className="overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="https://placehold.co/600x800/708090/ffffff"
+                src="https://placehold.co/600x800.png/708090/ffffff"
                 alt="Portrait of the practitioner"
                 width={600}
                 height={800}
