@@ -31,7 +31,6 @@ export default function Home() {
         <section id="why-it-exists" className="py-16 md:py-24 bg-secondary">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-headline text-primary mb-6">Why This Exists</h2>
               <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
                   <p>
                     I’ve spent two decades shuttling between presidential palaces, UN halls, university librairies and hack-day basements. The one constant: I learn faster when I write things down and break them. This is my public notebook for this process.
@@ -54,22 +53,25 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <ul className="list-none space-y-6">
-                        <li className="pl-5 space-y-2 border-l-4 border-primary/20">
+                    <ul className="list-none space-y-4">
+                        <li className="pl-5 space-y-1 border-l-4 border-primary/20">
                             <h3 className="font-headline text-2xl text-primary">The AI Dilemma</h3>
                             <p className="text-lg text-foreground/80">Governance experiments for algorithms that refuse to stay in their sandbox.</p>
                         </li>
-                        <li className="pl-5 space-y-2 border-l-4 border-primary/20">
+                        <li className="pl-5 space-y-1 border-l-4 border-primary/20">
                             <h3 className="font-headline text-2xl text-primary">Beyond 1.5°</h3>
                             <p className="text-lg text-foreground/80">Climate overshoot scenarios, minus the wishful thinking.</p>
                         </li>
-                        <li className="pl-5 space-y-2 border-l-4 border-primary/20">
+                        <li className="pl-5 space-y-1 border-l-4 border-primary/20">
                             <h3 className="font-headline text-2xl text-primary">Future of Democracy</h3>
                             <p className="text-lg text-foreground/80">Democratic plumbing for an attention-splintered century.</p>
                         </li>
                     </ul>
                      <p className="text-lg text-foreground/80 mt-8 text-center">
                         You'll also find other <strong className="font-headline">Dispatches</strong> scattered about—trip reports, prototypes, and stray thoughts from the other fields I've worked in.
+                    </p>
+                    <p className="text-center text-muted-foreground italic mt-4 text-sm">
+                      New focuses and microsites will open as curiosity (and insomnia) dictate.
                     </p>
                 </div>
             </div>
