@@ -13,13 +13,16 @@ export default function Landing() {
             <div className="max-w-3xl mx-auto animate-fade-in-up">
                 <div className="text-lg md:text-xl text-foreground/80 space-y-4">
                     <p>
-                        I started as a French diplomat, but that plan got complicated. The reality involved a long detour through the Élysée Palace as a political advisor, followed by transatlantic tours as a Harvard fellow, a climate policy geek, and a student of global development finance. Along the way, I also fell down the rabbit hole of AI, learning to both code applications and architect governance frameworks for them.
+                        I started as a French diplomat, but that plan got complicated. The reality involved a long detour through the Élysée Palace as a political advisor, followed by transatlantic tours as a Harvard fellow, a tech geek, and a profesionnal of climate policy and global development finance. Along the way, I also fell down the rabbit hole of AI.
                     </p>
                     <p>
-                        What I’ve learned is that our biggest problems have little respect for job descriptions or institutional silos. They are messy, interconnected, and demand we move between worlds that don't always speak the same language.
+                        What I learned is that our biggest problems—from AI governance to climate change to development finance—refuse to stay in their boxes and have little respect for job descriptions. They are messy, interconnected, and demand we move between worlds that don't always speak the same language.
                     </p>
                     <p>
-                        This website is my attempt to build a switchboard for that cross-disciplinary work. It is also, quite literally, a lab: a project where I code and test things, so please pardon the occasional digital dust.
+                        This website is my attempt to build a switchboard for that cross-disciplinary work.
+                    </p>
+                     <p>
+                        It is also, quite literally, a lab: a project where I code and test things, so please pardon the digital dust.
                     </p>
                 </div>
             </div>
