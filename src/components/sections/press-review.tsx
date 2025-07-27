@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function PressReview() {
   return (
@@ -10,9 +11,11 @@ export default function PressReview() {
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
           One external link a day—no commentary, no doomscrolling penalty.
         </p>
-        <Button size="lg" variant="default">
-          See Today's Link
-        </Button>
+        <Link href="https://studio--reviewflow-nrciu.us-central1.hosted.app/" target="_blank" rel="noopener noreferrer" passHref>
+          <Button size="lg" variant="default">
+            See Today's Link
+          </Button>
+        </Link>
       </div>
     </section>
   );
