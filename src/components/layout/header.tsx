@@ -6,19 +6,21 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '#ai', label: 'The AI Dilemma' },
-  { href: '#climate', label: 'Beyond 1.5°' },
-  { href: '#democracy', label: 'Future of Democracy' },
-  { href: '#dialogue', label: 'The Dialogue' },
-  { href: '#about', label: 'About' },
-  { href: '#biography', label: 'Biography' },
+  { href: '/ai', label: 'The AI Dilemma' },
+  { href: '/climate', label: 'Beyond 1.5°' },
+  { href: '/democracy', label: 'Future of Democracy' },
+  { href: '/dialogue', label: 'The Dialogue' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,8 +33,8 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled ? 'bg-card/80 backdrop-blur-sm shadow-md' : 'bg-transparent'
+        'sticky top-0 z-50 transition-all duration-300',
+        scrolled ? 'bg-card/80 backdrop-blur-sm shadow-md' : 'bg-card'
       )}
     >
       <div className="container mx-auto px-4">
@@ -46,7 +48,10 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                className={cn(
+                    "text-sm font-medium transition-colors",
+                    pathname === item.href ? "text-primary font-bold" : "text-foreground/80 hover:text-primary"
+                )}
               >
                 {item.label}
               </Link>
@@ -70,7 +75,10 @@ export default function Header() {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                        className={cn(
+                            "text-lg font-medium transition-colors",
+                            pathname === item.href ? "text-primary font-bold" : "text-foreground/80 hover:text-primary"
+                        )}
                         onClick={() => setOpen(false)}
                       >
                         {item.label}

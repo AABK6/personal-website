@@ -1,15 +1,13 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import Landing from '@/components/sections/landing';
-import PressReview from '@/components/sections/press-review';
+import Climate from '@/components/sections/climate';
 
-export default function Home() {
+export default function ClimatePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-1">
-        <Landing />
-        <PressReview />
+        <Climate />
       </main>
       <Footer />
     </div>
