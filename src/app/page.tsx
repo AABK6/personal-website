@@ -6,14 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, SlidersHorizontal } from 'lucide-react';
 
-const labArtifacts = [
-  { title: "Field Note", description: "A short, slightly opinionated essay—citations included, egg-on-face risk accepted." },
-  { title: "Prototype", description: "Tiny React gadgets, policy simulators, or data visualisations you can poke at." },
-  { title: "Dispatch", description: "Trip reports from conferences, negotiations, and corridors where the coffee is bad but the gossip is excellent." },
-  { title: "Press Review", description: "One external link a day—no commentary, no doomscrolling penalty." },
-  { title: "Timeline CV", description: "Scrollable highlights and low-lights; PDFs for the archivists." },
-];
-
 const labRules = [
     { text: "Poke around. Pick a room—the animations will politely guide you in." },
     { text: "Crave sources? Toggle the “show footnotes” switch." },
@@ -75,28 +67,6 @@ export default function Home() {
                     </p>
                 </div>
             </div>
-        </section>
-
-        <section id="what-you-will-find" className="py-16 md:py-24 bg-secondary">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="text-3xl md:text-4xl font-headline text-primary mb-4">What you’ll find inside</h2>
-            </div>
-            <div className="max-w-4xl mx-auto">
-                <Card>
-                    <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                            {labArtifacts.map((artifact, index) => (
-                                <div key={index} className="flex flex-col">
-                                    <h4 className="font-headline text-xl text-foreground font-bold">{artifact.title}</h4>
-                                    <p className="text-muted-foreground">{artifact.description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-          </div>
         </section>
 
         <section id="lab-rules" className="py-16 md:py-24 bg-background">
