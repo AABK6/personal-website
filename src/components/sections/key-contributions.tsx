@@ -7,17 +7,17 @@ const keyRoles = [
     {
       title: "Presidential Advisor",
       period: "2012-2017",
-      description: "Served at the center of power as a key advisor, managing bilateral European affairs during critical moments and shaping policy through analysis of public opinion."
+      description: "Served at the center of French power, advising President Hollande on European affairs, policy, and strategy, and playing a key role in shaping France's EU policies."
     },
     {
       title: "Transatlantic Scholar",
       period: "2017-2021",
-      description: "Pivoted to academia with fellowships at leading institutions, focusing research on populism, digital rights, and the governance of emerging technologies."
+      description: "Pivoted to academia with fellowships at Harvard and UCLA, researching populism, digital rights, and the governance of emerging technologies like AI and climate interventions."
     },
     {
       title: "Global Policy Leader",
       period: "2021-Present",
-      description: "Leads the policy department of a major global incubator for governance solutions, developing initiatives on climate, cyberspace, AI, and global health."
+      description: "Leads policy at the Paris Peace Forum, incubating initiatives on climate, cyberspace, and AI. Appointed Deputy Special Envoy for the 2023 Summit for a New Global Financing Pact."
     }
 ]
 
@@ -61,15 +61,15 @@ export default function KeyContributions() {
                 <CardContent className="p-6">
                  <div className="space-y-6">
                     <div>
-                        <h4 className="font-bold font-headline text-xl mb-2 text-primary">Adapting Governance for a New Era</h4>
+                        <h4 className="font-bold font-headline text-xl mb-2 text-primary">Pioneering Digital & Climate Governance</h4>
                         <p className="text-foreground/80">
-                           A central theme is the critical need to adapt democratic governance for a world disrupted by technology and planetary-scale risks. The work argues for new frameworks for digital rights, AI governance ("AI constitutionalism"), and confronting climate overshoot through integrated strategies.
+                           A central theme is the critical need to adapt democratic governance for a world disrupted by technology and planetary-scale risks. The work argues for new frameworks for digital rights, AI governance ("AI constitutionalism"), and confronting climate overshoot through integrated strategies. This is demonstrated through incubating initiatives like "Digital Rights in Society" and co-founding NGOs to bridge the North-South digital divide.
                         </p>
                     </div>
                      <div>
-                        <h4 className="font-bold font-headline text-xl mb-2 text-primary">From Dialogue to Action</h4>
+                        <h4 className="font-bold font-headline text-xl mb-2 text-primary">Reforming Global Finance</h4>
                         <p className="text-foreground/80">
-                           Emphasis is placed on translating high-level dialogue into concrete action. This is demonstrated through the incubation of initiatives like "Digital Rights in Society," the co-founding of NGOs, and developing public engagement tools like the "Human in the Loop" AI simulation to make abstract principles tangible.
+                           As Deputy Special Envoy for the Summit for a New Global Financing Pact, he played a key behind-the-scenes role in its success. The summit was a high-profile milestone in international efforts to find consensus on debt relief, climate finance, and support for vulnerable countries, ensuring civil society voices from the Global South were heard.
                         </p>
                     </div>
                  </div>

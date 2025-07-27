@@ -12,46 +12,70 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const timelineEvents = [
   {
-    date: '2008',
-    title: 'Graduate Studies in Public Policy',
+    date: '2007–2010',
+    title: 'Secretary of Foreign Affairs',
     description:
-      'Focused on economic development and international relations, laying the groundwork for a career in public service.',
-    sector: 'Academia & Research',
-  },
-  {
-    date: '2012',
-    title: 'Technology Policy Advisor',
-    description:
-      'Advised government agencies on the implications of emerging technologies, from broadband access to data privacy.',
+      'Joined the Ministry of Foreign Affairs, assigned to the department of financial affairs. Gained experience in international finance and administration within France’s diplomatic corps.',
     sector: 'State & National Politics',
   },
   {
-    date: '2017',
-    title: 'Founded a Civic Tech Startup',
+    date: '2010–2012',
+    title: 'Project Manager, Fondation Jean-Jaurès',
     description:
-      'Launched an initiative to improve citizen engagement and government transparency through digital platforms.',
+      'Managed events and publications on European and international topics at a prominent social-democratic think tank, honing expertise in European affairs.',
     sector: 'Global Governance & NGOs',
   },
   {
-    date: '2021',
-    title: 'Senior Fellow, Global Affairs Institute',
+    date: '2012–2014',
+    title: 'Policy Officer for European Affairs',
     description:
-      'Researched and wrote on the intersection of technology and geopolitics, focusing on AI and digital sovereignty.',
+      'Joined the Elysée Palace in President François Hollande’s cabinet, providing daily political briefs, analysis, and helping craft major policy speeches on European issues.',
+    sector: 'State & National Politics',
+  },
+  {
+    date: '2014–2016',
+    title: 'Counselor for Bilateral European Affairs',
+    description:
+      'Served as President Hollande’s point man for France’s relations with individual European countries, playing a key role in shaping French policies on EU matters.',
+    sector: 'State & National Politics',
+  },
+  {
+    date: '2016–2017',
+    title: 'Counselor for Policy Studies (Opinion & Strategy)',
+    description:
+      'Focused on strategic analysis and public opinion research, monitoring societal trends and voter sentiment to inform the President’s political strategy.',
+    sector: 'State & National Politics',
+  },
+  {
+    date: '2017–2019',
+    title: 'International Affairs Fellow',
+    description: 'Affiliated with Harvard’s Weatherhead Center and Belfer Center, researching European politics, global populism, and transatlantic relations.',
     sector: 'Academia & Research',
   },
   {
-    date: 'Present',
-    title: 'Independent Analyst & Writer',
-    description:
-      'Engaged in full-time research and writing, culminating in the work presented in this notebook.',
+    date: '2020–2021',
+    title: 'Emmett Fellow in Environmental Law & Policy',
+    description: 'At UCLA, conducted research on the governance of solar geoengineering, convening policymakers to explore this sensitive area of climate policy.',
     sector: 'Academia & Research',
   },
+  {
+    date: '2021–Present',
+    title: 'Chief Policy Officer, Paris Peace Forum',
+    description: 'Leads the policy team at a major global incubator, developing initiatives on climate, cyberspace, AI, and global health to strengthen multilateral cooperation.',
+    sector: 'Global Governance & NGOs',
+  },
+  {
+    date: 'Jan–June 2023',
+    title: 'Deputy Special Envoy',
+    description: 'Appointed by President Emmanuel Macron for the Summit for a New Global Financing Pact, helping to organize and coordinate the international summit in Paris.',
+    sector: 'State & National Politics',
+  }
 ];
 
 const careerFocusData = [
-  { name: 'State & National Politics', value: 1, color: 'hsl(var(--chart-1))' },
-  { name: 'Academia & Research', value: 3, color: 'hsl(var(--chart-2))' },
-  { name: 'Global Governance & NGOs', value: 1, color: 'hsl(var(--chart-3))' },
+  { name: 'State & National Politics', value: 5, color: 'hsl(var(--chart-1))' },
+  { name: 'Academia & Research', value: 2, color: 'hsl(var(--chart-2))' },
+  { name: 'Global Governance & NGOs', value: 2, color: 'hsl(var(--chart-3))' },
 ];
 
 export default function Biography() {

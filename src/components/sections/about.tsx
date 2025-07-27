@@ -20,17 +20,17 @@ export default function About() {
           </div>
           <div className="md:col-span-3">
             <h2 className="text-4xl md:text-5xl font-headline text-primary mb-4">
-              About the Practitioner
+              The Diplomat-Intellectual in the 21st Century
             </h2>
             <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
               <p>
-                With a background spanning public policy, technology, and international affairs, my work is driven by a single question: how can we build more resilient, equitable, and prosperous societies in the 21st century?
+                This is an interactive exploration of the career of Adrien Abecassis, a career diplomat and policy advisor with over 15 years of experience at the highest levels of government.
               </p>
               <p>
-                This notebook is a living repository of my research, analysis, and reflections on the critical challenges of our time. It's a space for untangling complexity, exploring difficult trade-offs, and charting potential paths forward.
+                It traces his journey from the center of French power to the forefront of global governance, navigating the complex interplay of diplomacy, academia, and policy innovation.
               </p>
               <p>
-                My current focus is on the intersection of artificial intelligence, climate change, and democratic governance. I believe these three domains will fundamentally shape the human experience for generations to come, and that navigating them successfully requires a multidisciplinary, evidence-based, and deeply humanistic approach.
+                His current focus is on pioneering digital and climate governance, architecting new frameworks for a world disrupted by technology and planetary-scale risks.
               </p>
             </div>
           </div>
