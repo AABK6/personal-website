@@ -20,17 +20,17 @@ export default function About() {
           </div>
           <div className="md:col-span-3">
             <h2 className="text-4xl md:text-5xl font-headline text-primary mb-4">
-              The Diplomat-Intellectual in the 21st Century
+              A Brief History of My Inbox
             </h2>
             <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
               <p>
-                This is an interactive exploration of the career of Adrien Abecassis, a career diplomat and policy advisor with over 15 years of experience at the highest levels of government.
+                My career began in the French diplomatic corps, which is a formal way of saying I learned how to manage budgets and write memos. A detour through a think tank led, somewhat unexpectedly, to the Élysée Palace, where for five years I served as an advisor to President François Hollande. My role was a mix of European affairs, political strategy, and trying to make sense of polling data.
               </p>
               <p>
-                It traces his journey from the center of French power to the forefront of global governance, navigating the complex interplay of diplomacy, academia, and policy innovation.
+                After leaving government in 2017, I traded the short-term pressures of Paris for the longer-term perspective of academia, with fellowships at Harvard and UCLA. There, my focus shifted from the immediate crises of a nation-state to the slower, more systemic challenges facing the global community, particularly in climate and technology governance.
               </p>
               <p>
-                His current focus is on pioneering digital and climate governance, architecting new frameworks for a world disrupted by technology and planetary-scale risks.
+                Today, I lead policy initiatives at the Paris Peace Forum, where we try to build platforms for cooperation on these very issues. It's a role that combines the practicality of my time in government with the analytical rigor of my years in research. You could say my inbox is just as full, but the subject lines have gotten a bit more existential.
               </p>
             </div>
           </div>
