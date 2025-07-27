@@ -18,7 +18,7 @@ const choices = [
 export default function Climate() {
   return (
     <>
-      <div className="parallax-bg" style={{ backgroundImage: "url('https://placehold.co/1920x1080/4682b4/ffffff')" }} data-ai-hint="earth space">
+      <div className="parallax-bg" style={{ backgroundImage: "url('https://placehold.co/1920x1080.png')" }} data-ai-hint="earth space">
         <div className="container mx-auto px-4 py-32 md:py-48 text-center text-white">
           <h2 className="text-4xl md:text-6xl font-headline mb-4 drop-shadow-lg">Beyond 1.5 Degrees</h2>
           <p className="text-lg md:text-xl max-w-3xl mx-auto drop-shadow-md">
@@ -44,7 +44,7 @@ export default function Climate() {
         </div>
       </div>
 
-      <div className="parallax-bg" style={{ backgroundImage: "url('https://placehold.co/1920x1080/228b22/ffffff')" }} data-ai-hint="forest canopy"></div>
+      <div className="parallax-bg" style={{ backgroundImage: "url('https://placehold.co/1920x1080.png')" }} data-ai-hint="forest canopy"></div>
 
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 text-center">
@@ -55,7 +55,7 @@ export default function Climate() {
         </div>
       </section>
 
-      <div className="parallax-bg" style={{ backgroundImage: "url('https://placehold.co/1920x1080/87ceeb/ffffff')" }} data-ai-hint="melting glacier"></div>
+      <div className="parallax-bg" style={{ backgroundImage: "url('https://placehold.co/1920x1080.png')" }} data-ai-hint="melting glacier"></div>
 
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 text-center">
