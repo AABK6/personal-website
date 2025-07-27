@@ -4,7 +4,7 @@ import Landing from '@/components/sections/landing';
 import PressReview from '@/components/sections/press-review';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, SlidersHorizontal } from 'lucide-react';
+import { CheckCircle, SlidersHorizontal, ArrowRight } from 'lucide-react';
 
 const labRules = [
     { text: "Poke around. Pick a room—the animations will politely guide you in." },
@@ -70,15 +70,15 @@ export default function Home() {
             </div>
         </section>
 
-        <section id="lab-rules" className="py-16 md:py-24 bg-background">
+        <section id="lab-rules" className="py-12 md:py-16 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-headline text-primary mb-6 text-center">Lab Rules</h2>
-              <ul className="space-y-4">
+              <h2 className="text-2xl font-headline text-muted-foreground mb-4 text-center">Lab Rules</h2>
+              <ul className="space-y-2">
                 {labRules.map((item, index) => (
                   <li key={index} className="flex items-start">
-                    <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 shrink-0" />
-                    <span className="text-lg text-foreground/80">{item.text}</span>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground mr-3 mt-1 shrink-0" />
+                    <span className="text-sm text-muted-foreground italic">{item.text}</span>
                   </li>
                 ))}
               </ul>
