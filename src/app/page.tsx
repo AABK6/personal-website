@@ -28,8 +28,8 @@ export default function Home() {
                   <p>
                     I’ve spent two decades shuttling between presidential palaces, UN halls, university librairies and hack-day basements. The one constant: I learn faster when I write things down and break them. This is my public notebook for this process.
                   </p>
-                  <p className="text-sm italic text-muted-foreground pt-4">
-                    <strong>A small disclaimer:</strong> this site is a perpetual beta. Things may flicker, break, or contradict last week’s post. That’s research. The views are my own; the bugs belong to the repo.
+                  <p className="text-base italic text-muted-foreground pt-4">
+                    <strong className="text-primary">A small disclaimer:</strong> this site is a perpetual beta. Things may flicker, break, or contradict last week’s post. That’s research. The views are my own; the bugs belong to the repo.
                   </p>
               </div>
             </div>
