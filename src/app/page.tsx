@@ -20,7 +20,7 @@ export default function Home() {
       <main className="flex-1">
         <Landing />
 
-        <section id="why-it-exists" className="py-16 md:py-24 bg-secondary">
+        <section id="why-it-exists" className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
@@ -35,7 +35,7 @@ export default function Home() {
           </div>
         </section>
         
-        <section id="inquiry-lines" className="py-16 md:py-24 bg-background">
+        <section id="inquiry-lines" className="py-16 md:py-24 bg-secondary">
             <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-12">
