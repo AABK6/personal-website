@@ -23,6 +23,7 @@ export default function Home() {
         <section id="why-it-exists" className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-headline text-primary mb-6">Why This Exists</h2>
               <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
                   <p>
                     I’ve spent two decades shuttling between presidential palaces, UN halls, university librairies and hack-day basements. The one constant: I learn faster when I write things down and break them. This is my public notebook for this process.
