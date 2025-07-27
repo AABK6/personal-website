@@ -12,10 +12,7 @@ export default function Landing() {
             </h1>
             <div className="max-w-3xl mx-auto animate-fade-in-up">
                 <p className="text-lg md:text-xl text-foreground/80 space-y-4">
-                    “I’m Adrien Abecassis—diplomat-turned-tinkerer.
-                    <br />
-                    <br />
-                    When treaties turn vague and PowerPoint turns grey, I open a fresh terminal, sharpen the pencils, and run little experiments on the big questions. Welcome to my lab-slash-field-journal: a place where policy memos share a bench with prototype code, and where failure is logged right next to the findings.”
+                    I started as a French diplomat, but that plan got complicated. The reality involved a long detour through the Élysée Palace as a political advisor, followed by transatlantic tours as a Harvard fellow, a climate policy geek, and a student of global development finance. Along the way, I also fell down the rabbit hole of AI. What I learned is that our biggest problems—from AI governance to climate change to development finance—refuse to stay in their boxes and have little respect for job descriptions. They are messy, interconnected, and demand we move between worlds that don't always speak the same language. This website is my attempt to build a switchboard for that cross-disciplinary work. It is also, quite literally, a lab: a project where I code and test things, so please pardon the digital dust.
                 </p>
             </div>
             <Link href="#why-it-exists" passHref>
