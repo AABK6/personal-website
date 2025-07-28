@@ -16,10 +16,11 @@ export default function BigBangScene() {
   const particlesRef = useRef<THREE.Points>(null!);
   const earthGroupRef = useRef<THREE.Group>(null!);
   const controlsRef = useRef<any>(null!);
-  const { camera, gl } = useThree();
+  const { camera } = useThree();
   const scroll = useScroll();
 
   const [animationState, setAnimationState] = useState("sphere");
+  const [isAnimating, setIsAnimating] = useState(false);
   const [captions, setCaptions] = useState({
     intro: 0,
     earth: 0,
@@ -76,50 +77,59 @@ export default function BigBangScene() {
   const earthTextures = useMemo(() => {
     const textureLoader = new THREE.TextureLoader();
     return {
-      map: textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg'),
-      bumpMap: textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg'),
-      specularMap: textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg'),
-      cloudsMap: textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png'),
+      map: textureLoader.load('/earth_atmos_2048.jpg'),
+      bumpMap: textureLoader.load('/earth_normal_2048.jpg'),
+      specularMap: textureLoader.load('/earth_specular_2048.jpg'),
+      cloudsMap: textureLoader.load('/earth_clouds_1024.png'),
     };
   }, []);
 
   useEffect(() => {
     camera.position.z = 40;
-    // Fade in intro caption
     gsap.to(captions, { intro: 0.6, duration: 1.2, ease: "power2.out", delay: 1 });
-  }, [camera, captions]);
+  }, [camera]);
 
-  useFrame((state) => {
+  useFrame(() => {
     const scrollOffset = scroll.offset;
 
-    // Fade out intro caption on scroll
     if (scrollOffset > 0.01 && captions.intro > 0) {
       gsap.to(captions, { intro: 0, duration: 0.6, ease: "power2.in" });
     }
 
-    // Sphere to grid transition
-    if (scrollOffset > 0.15 && animationState === "sphere") {
+    if (scrollOffset > 0.15 && animationState === "sphere" && !isAnimating) {
+      setIsAnimating(true);
       setAnimationState("exploding");
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setAnimationState("grid");
+          setIsAnimating(false);
+        }
+      });
+
       const positions = particleGeometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        gsap.to(positions.slice(i * 3, i * 3 + 3), {
-          x: gridPositions[i * 3],
-          y: gridPositions[i * 3 + 1],
-          z: gridPositions[i * 3 + 2],
-          duration: 4,
-          delay: Math.random() * 1.5,
-          ease: "power3.inOut",
-          onUpdate: () => {
-            if (particlesRef.current) particlesRef.current.geometry.attributes.position.needsUpdate = true;
-          },
-        });
-      }
-      gsap.to(camera.position, { z: 10, duration: 4, ease: "power3.inOut" });
-      setTimeout(() => setAnimationState("grid"), 5500);
+      const proxy = { value: 0 };
+
+      tl.to(proxy, {
+        value: 1,
+        duration: 4,
+        ease: "power3.inOut",
+        onUpdate: () => {
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const i3 = i * 3;
+            positions[i3] = THREE.MathUtils.lerp(spherePositions[i3], gridPositions[i3], proxy.value);
+            positions[i3 + 1] = THREE.MathUtils.lerp(spherePositions[i3 + 1], gridPositions[i3 + 1], proxy.value);
+            positions[i3 + 2] = THREE.MathUtils.lerp(spherePositions[i3 + 2], gridPositions[i3 + 2], proxy.value);
+          }
+          if (particlesRef.current) particlesRef.current.geometry.attributes.position.needsUpdate = true;
+        }
+      }, 0);
+
+      tl.to(camera.position, { z: 10, duration: 4, ease: "power3.inOut" }, 0);
     }
 
-    // Journey to particle
-    if (scrollOffset > 0.4 && animationState === "grid") {
+    if (scrollOffset > 0.4 && animationState === "grid" && !isAnimating) {
+      setIsAnimating(true);
       setAnimationState("journeying");
       if (controlsRef.current) controlsRef.current.enabled = false;
 
@@ -144,6 +154,7 @@ export default function BigBangScene() {
         },
         onComplete: () => {
           setAnimationState("focused");
+          setIsAnimating(false);
           if (controlsRef.current) {
             controlsRef.current.enabled = true;
             controlsRef.current.target.copy(targetParticlePosition);
@@ -153,7 +164,6 @@ export default function BigBangScene() {
       });
     }
 
-    // Show chart
     if (scrollOffset > 0.7 && animationState === "focused") {
         if(captions.earth > 0) {
             gsap.to(captions, { earth: 0, duration: 0.6, ease: "power2.in" });
@@ -163,10 +173,9 @@ export default function BigBangScene() {
         }
     }
 
-
     if (earthGroupRef.current && earthGroupRef.current.visible) {
-      earthGroupRef.current.rotation.y += 0.0005; // Earth spin
-      (earthGroupRef.current.children[1] as THREE.Mesh).rotation.y += 0.0001; // Clouds spin
+      earthGroupRef.current.rotation.y += 0.0005;
+      (earthGroupRef.current.children[1] as THREE.Mesh).rotation.y += 0.0001;
     }
   });
 

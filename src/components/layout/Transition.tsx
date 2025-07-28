@@ -8,7 +8,7 @@ export default function Transition({ children }: { children: React.ReactNode }) 
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <motion.group
         key={scene}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -16,7 +16,7 @@ export default function Transition({ children }: { children: React.ReactNode }) 
         transition={{ duration: 1.5 }}
       >
         {children}
-      </motion.div>
+      </motion.group>
     </AnimatePresence>
   );
 }
