@@ -1,10 +1,12 @@
-import type {Metadata} from 'next';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
+import type { Metadata } from "next";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import WebGLCanvas from "@/components/layout/WebGLCanvas";
+import SceneManager from "@/components/canvas/SceneManager";
 
 export const metadata: Metadata = {
-  title: "The Abecassis Lab",
-  description: 'A collection of thoughts on AI, climate, democracy, and more.',
+  title: "Big Bang",
+  description: "An interactive journey through time.",
 };
 
 export default function RootLayout({
@@ -16,13 +18,28 @@ export default function RootLayout({
     <html lang="en" className="!scroll-smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className="font-body antialiased">
-        {children}
+      <body className="font-body antialiased bg-[#111]">
+        <WebGLCanvas>
+          <SceneManager />
+        </WebGLCanvas>
+        <main>{children}</main>
         <Toaster />
       </body>
     </html>
   );
 }
+

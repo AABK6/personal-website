@@ -1,94 +1,16 @@
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
-import Landing from '@/components/sections/landing';
-import PressReview from '@/components/sections/press-review';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { ArrowRight, CheckCircle, SlidersHorizontal } from 'lucide-react';
+"use client";
 
-const labRules = [
-    { text: "Poke around. Pick a room—the animations will politely guide you in." },
-    { text: "Crave sources? Toggle the “show footnotes” switch." },
-    { text: "Spot an error? Reply or DM; the lab runs on peer-review and gentle sarcasm." },
-    { text: "Fork the code. Snippets are MIT-licensed unless my lawyer panics." },
-];
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <Header />
-      <main className="flex-1">
-        <Landing />
-
-        <section id="why-it-exists" className="py-16 md:py-24 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-headline text-primary mb-6">Why This Exists</h2>
-              <div className="prose prose-lg max-w-none text-foreground/80 space-y-4">
-                  <p>
-                    During two decades shuttling between presidential palaces, UN halls, university libraries, and the occasional hack-day basement, I’ve found one constant: I learn faster when I write things down, build models, fail, and see where they break. This website is the public notebook for that process—miscalculations and findings included.
-                  </p>
-                  <p className="text-base italic text-muted-foreground pt-4">
-                    <strong className="text-primary">A small disclaimer:</strong> this site is a perpetual beta. Things may flicker, break, or contradict last week’s post. That’s research. The views are my own; the bugs belong to the repo.
-                  </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        <section id="inquiry-lines" className="py-16 md:py-24 bg-secondary">
-            <div className="container mx-auto px-4">
-                <div className="max-w-3xl mx-auto">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-headline text-primary mb-4">The Main Lines of Inquiry</h2>
-                        <p className="text-lg text-foreground/80">
-                            Over the years, a few core obsessions have emerged from the noise. These are the recurring challenges where I focus most of my 'lab work.' Each lives in its own microwebsite—a dedicated room in the lab.
-                        </p>
-                    </div>
-
-                    <ul className="list-none space-y-4">
-                        <li className="pl-5 space-y-1 border-l-4 border-primary/20">
-                            <h3 className="font-headline text-2xl text-primary">The AI Dilemma</h3>
-                            <p className="text-lg text-foreground/80">Governance experiments for algorithms that refuse to stay in their sandbox.</p>
-                        </li>
-                        <li className="pl-5 space-y-1 border-l-4 border-primary/20">
-                            <h3 className="font-headline text-2xl text-primary">Beyond 1.5°</h3>
-                            <p className="text-lg text-foreground/80">Climate overshoot scenarios, minus the wishful thinking.</p>
-                        </li>
-                        <li className="pl-5 space-y-1 border-l-4 border-primary/20">
-                            <h3 className="font-headline text-2xl text-primary">Future of Democracy</h3>
-                            <p className="text-lg text-foreground/80">Democratic plumbing for an attention-splintered century.</p>
-                        </li>
-                    </ul>
-                     <p className="text-lg text-foreground/80 mt-8 text-center">
-                        You'll also find other <strong className="font-headline">Dispatches</strong> scattered about—trip reports, prototypes, and stray thoughts from the other fields I've worked in.
-                    </p>
-                    <p className="text-center text-muted-foreground italic mt-4 text-sm">
-                      New focuses and microsites will open as curiosity (and insomnia) dictate.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section id="lab-rules" className="py-12 md:py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto">
-              <h2 className="text-2xl font-headline text-primary mb-4 text-center">Lab Rules</h2>
-              <ul className="space-y-2">
-                {labRules.map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <ArrowRight className="h-4 w-4 text-muted-foreground mr-3 mt-1 shrink-0" />
-                    <span className="text-sm text-muted-foreground italic">{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <PressReview />
-      </main>
-      <Footer />
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
+      <h1 className="text-6xl font-bold mb-8">The Journey</h1>
+      <div className="flex space-x-4">
+        <Link href="/big-bang" className="text-2xl text-blue-400">
+          Start with the Big Bang
+        </Link>
+      </div>
     </div>
   );
 }

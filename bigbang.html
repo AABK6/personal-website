@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big&nbsp;Bang</title>
+
+  <!-- Tailwind (just once) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Three.js and GSAP Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Optional: a favicon to silence the 404 -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- EB Garamond for captions and chart -->
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            /* overflow: hidden; */
+            background-color: #111;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111;
+            z-index: 100;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* Keyframe animation for the spinning loader */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        #scene-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            position: sticky;
+            top: 0;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .caption-card{
+            position:fixed;left:50%;top:15%;transform:translateX(-50%);
+            z-index:150;
+            background:rgba(0,0,0,.25);
+             -webkit-backdrop-filter:blur(4px);
+            backdrop-filter:blur(4px);
+            padding:.55rem .9rem;border-radius:.65rem;
+            font-family:"EB Garamond",serif;
+            font-size:clamp(14px,4vw,18px);      /* smaller & responsive */
+            font-weight:400;letter-spacing:.2px;
+            line-height:1.35;text-align:center;
+            max-width:88vw;white-space:normal;   /* wraps on small screens */
+            opacity:.6;                          /* base transparency */
+        }
+
+        #caption-earth{top:auto; bottom: 12%;}             /* will fade in later */
+        #caption-history-1, #caption-history-2 {
+            top: auto;
+            bottom: 12%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .caption-card {
+                font-size: clamp(12px, 3vw, 16px);
+            }
+            #caption-earth, #caption-history-1, #caption-history-2 {
+                bottom: 15%;
+            }
+        }
+
+        .scroll-arrow{
+            position:fixed;left:50%;bottom:8%;transform:translateX(-50%);
+            z-index:150;
+            font-size:26px;color:#fff;opacity:.35;
+            animation:arrowPulse 1.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowPulse{
+          from{transform:translate(-50%,0);}
+          to  {transform:translate(-50%,8px);}   /* gentle bounce */
+        }
+
+
+        #population-chart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none; /* Initially non-interactive */
+            transition: opacity 0.5s ease-in-out;
+            z-index: 200; /* Ensure it's on top */
+        }
+
+        /* Use EB Garamond for all chart text 
+        #population-chart-container, #population-chart-container * {
+            font-family: 'EB Garamond', serif !important;
+        } */
+
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- React and Charting Libraries -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/react-is@17/umd/react-is.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@3.0.2/umd/Recharts.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <!-- Animation 1: The Spinning Loader -->
+    <div id="loader">
+        <!-- SVG spinner for loading animation -->
+        <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
+            <path d="M11.5262 2.4796C11.5262 1.29002 12.4905 0.325683 13.6801 0.325684C14.8696 0.325684 15.834 1.29002 15.834 2.4796C15.834 3.66917 14.8696 4.63352 13.6801 4.63352C13.2211 4.63352 12.7956 4.48996 12.4462 4.24529L9.25663 7.35216C9.13483 7.10737 8.94113 6.90284 8.70224 6.7646L11.8825 3.66673C11.6573 3.32637 11.5262 2.9183 11.5262 2.4796ZM7.40672 6.6878L4.30542 3.66677C4.53068 3.3264 4.66184 2.91832 4.66184 2.4796C4.66184 1.29002 3.6975 0.325683 2.50793 0.325683C1.31835 0.325683 0.354011 1.29002 0.35401 2.4796C0.35401 3.66917 1.31835 4.63352 2.50793 4.63352C2.96689 4.63352 3.39232 4.48997 3.74178 4.24532L6.78254 7.20738C6.93287 6.97972 7.14989 6.79781 7.40672 6.6878ZM6.75617 8.66022L3.74182 11.5964C3.39236 11.3518 2.96691 11.2082 2.50793 11.2082C1.31836 11.2082 0.354016 12.1725 0.354016 13.3621C0.354016 14.5517 1.31836 15.516 2.50793 15.516C3.69751 15.516 4.66185 14.5517 4.66185 13.3621C4.66185 12.9234 4.53069 12.5153 4.30545 12.175L7.35952 9.20009C7.10816 9.0815 6.89814 8.89286 6.75617 8.66022ZM8.74484 9.11888L11.8823 12.1752C11.6571 12.5155 11.5259 12.9236 11.5259 13.3623C11.5259 14.5519 12.4903 15.5163 13.6798 15.5163C14.8694 15.5163 15.8337 14.5519 15.8337 13.3623C15.8337 12.1728 14.8694 11.2084 13.6798 11.2084C13.2209 11.2084 12.7954 11.352 12.446 11.5966L9.27842 8.51105C9.16543 8.76117 8.97861 8.97251 8.74484 9.11888Z" fill="white"></path>
+          </g>
+        </svg>
+    </div>
+
+    <div id="caption-intro" class="caption-card opacity-0 pointer-events-none">
+      Au début, l’univers tout entier tenait ici.
+    </div>
+
+    <div id="caption-earth" class="caption-card opacity-0 pointer-events-none">
+      Maintenant, toute l’humanité se tient là.
+    </div>
+    <div id="caption-history-1" class="caption-card">
+        Pendant longtemps, nous n'étions pas très nombreux.
+    </div>
+    <div id="caption-history-2" class="caption-card">
+        Puis soudain, tout changea.
+    </div>
+
+    <!-- scroll cue -->
+    <div id="scroll-arrow" class="scroll-arrow pointer-events-none">
+    &#x25BD;
+    </div>
+
+    <!-- Info Panel -->
+    <div id="info-panel" class="info-panel opacity-0 transition-opacity duration-500">
+        <h2 class="font-bold text-lg mb-2">Interactive Particle System</h2>
+        <p>This animation replicates the two visual effects you requested from the U x Machina website.</p>
+        <ul class="list-disc list-inside mt-2">
+            <li>Move your mouse to interact with the particles.</li>
+            <li>Click and drag to rotate the camera.</li>
+            <li>Scroll to zoom in and out.</li>
+        </ul>
+        <p class="mt-2 text-xs text-gray-400">This is a simplified replication for demonstration.</p>
+    </div>
+
+    <!-- Animation 2: The Particle System Canvas -->
+    <canvas id="scene-container"></canvas>
+
+    <!-- Population Chart Container -->
+    <div id="population-chart-container">
+        <div id="root"></div>
+    </div>
+
+    <!-- Spacer for scrolling -->
+    <div style="height: 300vh;"></div>
+
+    <script>
+        // Libraries are loaded globally from the <head>
+
+        // --- Basic Setup ---
+        let scene, camera, renderer, particles, controls;
+        let earthMesh, cloudsMesh, atmosphereMesh;
+        let mouse = new THREE.Vector2(-100, -100); // Off-screen initially
+        const particleCount = 15000; // Number of particles in the system
+        const sphereRadius = 3; // radius of the sphere for initial particle positions
+        const gridDimensions = 160; // size of the grid area
+        const EARTH_RADIUS = 0.5;
+        const pointers = new Map();
+        const captionIntro  = document.getElementById('caption-intro');
+        const captionEarth  = document.getElementById('caption-earth');
+        const scrollArrow   = document.getElementById('scroll-arrow');
+        const chartContainer = document.getElementById('population-chart-container');
+
+        const spherePositions = []; // Stores initial sphere positions for each particle
+        const gridPositions = [];   // Stores grid positions for each particle
+        let animationState = 'sphere'; // sphere, exploding, grid, journeying, focused, chart
+        let targetParticleIndex; // Index of the special particle for the camera journey
+        let targetParticlePosition = new THREE.Vector3(); // Position of the target particle
+        let canShowChart = false; // Flag to control chart visibility
+        const chartThreshold = 3000; // When to show the population chart
+
+        let virtualScrollY = 0; // Smoothed scroll position
+        let targetScrollY = 0;  // Target scroll position (raw input)
+        let scrollSpeed = 0.07; // Adjust for smoother or faster interpolation
+
+        // --- Event Handlers ---
+        function onWindowResize() {
+            // Update camera and renderer on window resize
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            // Normalize mouse position to [-1, 1] for use in shaders
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function onWheel(event) {
+            // During the narrative part, we prevent default to control the scene.
+            event.preventDefault();
+            targetScrollY += event.deltaY * 0.5;
+            // When focused on the Earth, OrbitControls no longer handles scroll for zooming.
+        }
+
+        let lastTouchY = 0;
+        function onTouchStart(event) {
+            // Store initial Y position for touch scrolling
+            lastTouchY = event.touches[0].clientY;
+        }
+
+        function onTouchMove(event) {
+            // Handle vertical touch movement for scrolling
+            event.preventDefault();
+            const currentY = event.touches[0].clientY;
+            const deltaY = lastTouchY - currentY;
+            targetScrollY += deltaY;
+            lastTouchY = currentY;
+        }
+
+        function handleScroll(scrollY) {
+            // Handles scroll-based transitions and camera zoom
+            const explosionThreshold = 500; // When to trigger sphere-to-grid
+            const journeyThreshold = 1500;  // When to trigger camera journey
+            const maxZoom = 10;
+            const minZoom = 35;
+
+            // Only control zoom if we are not on the final journey
+            if (animationState !== 'journeying' && animationState !== 'focused' && animationState !== 'chart') {
+                const zoom = minZoom - (scrollY / 60);
+                camera.position.z = Math.max(zoom, maxZoom);
+            }
+
+            // Trigger transitions based on scroll position
+            if (scrollY > explosionThreshold && animationState === 'sphere') {
+                transitionToGrid();
+            } else if (scrollY > journeyThreshold && animationState === 'grid') {
+                startJourneyToParticle();
+            } else if (scrollY > chartThreshold && animationState === 'focused' && canShowChart) {
+                animationState = 'chart';
+                chartContainer.style.opacity = 1;
+                chartContainer.style.pointerEvents = 'auto';
+                gsap.to(scrollArrow, {opacity: 0, duration: 0.6, ease:"power2.in"});
+            }
+
+            if (animationState === 'chart') {
+                const chartScroll = scrollY - chartThreshold;
+                const progress = Math.min(1, Math.max(0, chartScroll / (document.body.scrollHeight - window.innerHeight - chartThreshold)));
+                
+                // Dispatch a custom event with the progress
+                const event = new CustomEvent('update-chart', { detail: { progress } });
+                window.dispatchEvent(event);
+            }
+        }
+
+        // --- Initialization ---
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x111111, 10, 20); // Add fog for depth effect
+
+            // --- Lighting for the globe ---
+            const sun = new THREE.DirectionalLight(0xffffff, 2); // brighter key light
+            sun.position.set(5, 3, 5);
+            scene.add(sun);
+
+            scene.add(new THREE.AmbientLight(0x666666));         // slightly brighter fill
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(110, window.innerWidth / window.innerHeight, 0.1, 1000); // Perspective camera : FOV, aspect ratio, near and far planes
+            camera.position.z = 40; // Start far away
+
+            // Renderer
+            const canvas = document.getElementById('scene-container');
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.domElement.style.touchAction = 'none';   // canvas owns all touch gestures
+
+            // Orbit Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.enablePan = false;
+            controls.minDistance = 3;
+            controls.maxDistance = 40;
+
+            /* --- mobile touch mapping --- */
+            controls.touches.ONE = THREE.TOUCH.NONE;          // disable 1-finger rotate
+            controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;  // 2-fingers = zoom + orbit
+            // optional: keep three-finger pan
+
+            canvas.addEventListener('pointerdown', e => {
+                pointers.set(e.pointerId, e.clientY);
+            });
+
+            canvas.addEventListener('pointermove', e => {
+                if (!pointers.has(e.pointerId)) return;
+
+                // How many pointers are currently active?
+                if (pointers.size === 1) {                   // ← our "narrative swipe"
+                    const lastY = pointers.get(e.pointerId);
+                    const dy    = lastY - e.clientY;
+                    pointers.set(e.pointerId, e.clientY);
+
+                    // feed vertical delta into timeline
+                    targetScrollY += dy;
+                    e.preventDefault();                      // stop page scroll / rubber-band
+                }
+                // else (2+ pointers) do nothing – OrbitControls is handling the event.
+            }, { passive:false });
+
+            ['pointerup','pointercancel','pointerleave','pointerout']
+            .forEach(type => canvas.addEventListener(type, e => {
+                pointers.delete(e.pointerId);
+            }));
+
+            // --- Particle Creation ---
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3); // Particle positions
+            const colors = new Float32Array(particleCount * 3);    // Particle colors
+            const sizes = new Float32Array(particleCount);         // Particle sizes
+            const initialColors = new Float32Array(particleCount * 3); // To store original colors
+
+            const color = new THREE.Color(); // Helper for color calculations
+
+            // 1. Generate Sphere Positions
+            for (let i = 0; i < particleCount; i++) {
+                // Fibonacci sphere algorithm for even distribution
+                const phi = Math.acos(-1 + (2 * i) / particleCount);
+                const theta = Math.sqrt(particleCount * Math.PI) * phi;
+
+                const x = sphereRadius * Math.cos(theta) * Math.sin(phi);
+                const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
+                const z = sphereRadius * Math.cos(phi);
+
+                spherePositions.push(x, y, z); // Store for later
+                positions[i * 3] = x;
+                positions[i * 3 + 1] = y;
+                positions[i * 3 + 2] = z;
+
+                // Assign color using HSL for a rainbow effect
+                color.setHSL(i / particleCount, 1.0, 0.5);
+                colors[i*3] = color.r;
+                colors[i*3+1] = color.g;
+                colors[i*3+2] = color.b;
+
+                // Store initial color for reset
+                initialColors[i*3] = color.r;
+                initialColors[i*3+1] = color.g;
+                initialColors[i*3+2] = color.b;
+
+                sizes[i] = Math.random() * 0.5 + 0.01; // Random size between 0.01 and 0.5
+            }
+
+            // 2. Generate Grid Positions and Select Target
+            const halfGrid = gridDimensions / 2;
+            targetParticleIndex = Math.floor(Math.random() * particleCount); // Pick a random target
+
+            for (let i = 0; i < particleCount; i++) {
+                 // Random grid position within the cube
+                 const x = (Math.random() - 0.5) * gridDimensions;
+                 const y = (Math.random() - 0.5) * gridDimensions;
+                 const z = (Math.random() - 0.5) * gridDimensions;
+                 gridPositions.push(x, y, z);
+
+                 // Store the target's position for the camera journey
+                 if (i === targetParticleIndex) {
+                    targetParticlePosition.set(x, y, z);
+                 }
+            }
+
+            // --- Create high-fidelity Earth at targetParticlePosition ---
+            const loader = new THREE.TextureLoader().setCrossOrigin('anonymous');
+            const earthMap   = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg', t => t.encoding = THREE.sRGBEncoding);
+            const bumpMap    = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg');
+            const specMap    = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg');
+            const cloudsMap  = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png');
+
+
+            // Planet
+            earthMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 64, 64),           // radius 0.5 world-units
+            new THREE.MeshPhongMaterial({
+                map: earthMap,
+                bumpMap: bumpMap,
+                bumpScale: 0.005,
+                specularMap: specMap,
+                shininess: 5
+            })
+            );
+            earthMesh.position.copy(targetParticlePosition);
+            earthMesh.visible = false;               // ← start hidden
+            scene.add(earthMesh);
+
+            // Clouds: slightly larger transparent sphere
+            cloudsMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(0.503, 64, 64),
+            new THREE.MeshPhongMaterial({
+                map: cloudsMap,
+                transparent: true,
+                depthWrite: false
+            })
+            );
+            cloudsMesh.position.copy(targetParticlePosition);
+            cloudsMesh.visible = false;
+            scene.add(cloudsMesh);
+
+            // Subtle atmosphere glow (fresnel)
+            const glowMaterial = new THREE.ShaderMaterial({
+                uniforms: { 'c':{value:1.0}, 'p':{value:2.0}, glowColor:{value:new THREE.Color(0x3b8cff)}},
+                vertexShader: `varying vec3 vNormal; void main(){vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);} `,
+                fragmentShader:`uniform vec3 glowColor; uniform float c; uniform float p; varying vec3 vNormal;
+                    void main(){float intensity = pow(c - dot(vNormal, vec3(0.0,0.0,1.0)), p); gl_FragColor = vec4(glowColor * intensity, 1.0);} `,
+                side: THREE.BackSide,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            });
+            atmosphereMesh = new THREE.Mesh(new THREE.SphereGeometry(0.53,64,64), glowMaterial);
+            atmosphereMesh.position.copy(targetParticlePosition);
+            atmosphereMesh.visible = false;
+            scene.add(atmosphereMesh);
+
+            // Hide the original point so it doesn’t poke through
+            sizes[targetParticleIndex] = 0;
+
+            // Assign attributes to geometry
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('initialColor', new THREE.BufferAttribute(initialColors, 3)); // Store for reset
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            // Custom shaders for size attenuation and color
+            const vertexShader = `
+                attribute float size;
+                varying vec3 vColor;
+                
+                uniform vec3 uMouse;
+                uniform float uInteractionRadius;
+
+                varying float vHighlight;
+
+                void main() {
+                    vColor = color;
+
+                    // Calculate distance to the mouse uniform
+                    float dist = length(position - uMouse);
+
+                    // Use smoothstep to create a falloff effect.
+                    // It will be 1.0 if dist < uInteractionRadius and 0.0 if dist > uInteractionRadius + falloff
+                    float falloff = 1.0; // How quickly the highlight fades
+                    vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
+
+                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = size * (300.0 / -mvPosition.z);
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `;
+            const fragmentShader = `
+                varying vec3 vColor;
+                varying float vHighlight;
+
+                void main() {
+                    // Discard pixels outside the circular point
+                    if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
+                    
+                    // Mix base color with a bright highlight color
+                    vec3 highlightColor = vec3(1.0, 1.0, 1.0); // White
+                    vec3 finalColor = mix(vColor, highlightColor, vHighlight);
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            // Shader material for custom particle effects
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uMouse: { value: new THREE.Vector3(-100, -100, 0) }, // Off-screen initially
+                    uInteractionRadius: { value: 1.5 }
+                },
+                vertexShader,
+                fragmentShader,
+                vertexColors: true,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+
+            // Create the Points object and add to scene
+            particles = new THREE.Points(geometry, material);
+            particles.frustumCulled = false;   // ← stop Three.js from culling the whole cloud
+            scene.add(particles);
+
+            // --- Event Listeners ---
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onMouseMove, false);
+            window.addEventListener('wheel', onWheel, { passive: false });
+
+            // --- Initial Transition ---
+            // Hide loader after a delay
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                document.getElementById('info-panel').classList.remove('opacity-0');
+                 setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    // fade in intro caption & arrow
+                    gsap.to([captionIntro, scrollArrow], {opacity:0.6, duration:1.2, ease:"power2.out", onComplete: () => {
+                        // Add a one-time event listener to fade out the caption on the first scroll.
+                        window.addEventListener('wheel', handleFirstScroll, { once: true });
+                        window.addEventListener('touchmove', handleFirstScroll, { once: true });
+                    }});
+                 }, 500);
+            }, 2000); // 2-second simulated load time
+        }
+
+        function handleFirstScroll() {
+            gsap.to([captionIntro, scrollArrow], {opacity: 0, duration: 0.6, ease:"power2.in"});
+        }
+
+        // --- Transition Animations ---
+        function transitionToGrid() {
+            // Transition from sphere to grid layout
+            animationState = 'exploding';
+
+            // Animate the interaction radius to a larger value for the grid
+            gsap.to(particles.material.uniforms.uInteractionRadius, {
+                value: 6.0, // Larger radius for the spread-out grid
+                duration: 4,
+                ease: "power3.inOut"
+            });
+
+            const positions = particles.geometry.attributes.position.array;
+            let animationsComplete = 0;
+
+            for (let i = 0; i < particleCount; i++) {
+                 // Proxy object for GSAP to animate
+                 const proxy = {
+                    x: positions[i * 3],
+                    y: positions[i * 3 + 1],
+                    z: positions[i * 3 + 2]
+                };
+
+                gsap.to(proxy, {
+                    x: gridPositions[i * 3],
+                    y: gridPositions[i * 3 + 1],
+                    z: gridPositions[i * 3 + 2],
+                    duration: 4,
+                    delay: Math.random() * 1.5, // Staggered start
+                    ease: "power3.inOut",
+                    onUpdate: () => {
+                        // Update geometry position as GSAP animates
+                        positions[i * 3] = proxy.x;
+                        positions[i * 3 + 1] = proxy.y;
+                        positions[i * 3 + 2] = proxy.z;
+                        particles.geometry.attributes.position.needsUpdate = true;
+                    },
+                    onComplete: () => {
+                        animationsComplete++;
+                        if (animationsComplete === particleCount) {
+                            animationState = 'grid';
+                        }
+                    }
+                });
+            }
+        }
+
+        function startJourneyToParticle() {
+            // Camera flies to a specific particle in the grid
+            animationState = 'journeying';
+            controls.enabled = false;
+
+            // A fixed viewing position relative to the Earth for a consistent final view
+            const cameraEndPosition = targetParticlePosition.clone().add(new THREE.Vector3(0, EARTH_RADIUS * 0.5, EARTH_RADIUS * 4));
+            const startPosition     = camera.position.clone();
+
+            // Control point for the bezier curve, creating an arc
+            const controlPoint      = new THREE.Vector3()
+                .lerpVectors(startPosition, cameraEndPosition, 0.5)
+                .add(new THREE.Vector3(0, startPosition.distanceTo(cameraEndPosition) * 0.2, 0));
+
+            // Create a three.js curve object for the camera's path.
+            const curve = new THREE.QuadraticBezierCurve3(
+                startPosition,
+                controlPoint,
+                cameraEndPosition
+            );
+
+            const journeyLookAtTarget = new THREE.Vector3().copy(controls.target);
+
+            const tl = gsap.timeline({
+                onStart: () => {
+                    // Make Earth visible and fade it in
+                    earthMesh.visible = true;
+                    cloudsMesh.visible = true;
+                    atmosphereMesh.visible = true;
+                    gsap.fromTo([earthMesh.material, cloudsMesh.material, atmosphereMesh.material],
+                        { opacity: 0 },
+                        { opacity: 1, duration: 1.5, ease: "power2.out" }
+                    );
+                },
+                onComplete: () => {
+                    // Finalize the scene
+                    gsap.fromTo(captionEarth, { opacity: 0 }, { opacity: .6, duration: 1.2, ease: "power2.out", onComplete: () => {
+                        setTimeout(() => {
+                            canShowChart = true;
+                            // If user hasn't scrolled far enough for the chart, show arrow
+                            if (virtualScrollY < chartThreshold) {
+                                gsap.to(scrollArrow, {opacity: 0.6, duration: 1.2, ease: "power2.out"});
+                            }
+                        }, 2000); // 2-second delay
+                    }});
+                    animationState = 'focused';
+                    controls.enabled = true;
+                    controls.minDistance = EARTH_RADIUS * 1.1;
+                    controls.maxDistance = EARTH_RADIUS * 5;
+                    // Update the official OrbitControls target and sync
+                    controls.target.copy(targetParticlePosition);
+                    controls.update();
+                }
+            });
+
+            // --- PHASE 1: PIVOT --- 
+            // Animate the look-at target to pivot the camera towards the Earth.
+            tl.to(journeyLookAtTarget, {
+                x: targetParticlePosition.x,
+                y: targetParticlePosition.y,
+                z: targetParticlePosition.z,
+                duration: 5, // Duration for the pivot
+                ease: "power2.inOut",
+                onUpdate: () => {
+                    camera.lookAt(journeyLookAtTarget);
+                }
+            });
+
+            // --- PHASE 2: JOURNEY ---
+            // Animate a proxy value from 0 to 1 to control the camera's position along the curve.
+            const journeyProxy = { t: 0 };
+            tl.to(journeyProxy, {
+                t: 1,
+                duration: 7, // Duration for the journey itself
+                ease: "power3.inOut",
+                onUpdate: () => {
+                    // Use the curve's .getPoint() method to update the camera's position.
+                    curve.getPoint(journeyProxy.t, camera.position);
+                    // Ensure the camera keeps looking at the final destination during the flight.
+                    camera.lookAt(targetParticlePosition);
+                }
+            });
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (earthMesh) {
+                earthMesh.rotation.y  += 0.0005;   // slow spin
+                cloudsMesh.rotation.y += 0.0006;   // clouds a bit faster
+            }
+
+            // Smoothly interpolate the virtual scroll position
+            virtualScrollY += (targetScrollY - virtualScrollY) * scrollSpeed;
+            handleScroll(virtualScrollY);
+
+            if (animationState !== 'journeying') {
+                controls.update();
+            }
+
+            // Project mouse onto a plane at z=0 in world space
+            const mouseWorld = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
+            const direction = mouseWorld.sub(camera.position).normalize();
+            const distanceToPlane = -camera.position.z / direction.z;
+            const mouseOnPlane = camera.position.clone().add(direction.multiplyScalar(distanceToPlane));
+
+            // Update the shader uniform for mouse position
+            particles.material.uniforms.uMouse.value.copy(mouseOnPlane);
+
+            renderer.render(scene, camera);
+        }
+
+        // --- Start ---
+        init(); // Initialize scene and objects
+        animate(); // Start animation loop
+    </script>
+    <script type="text/babel">
+        // This function will contain the main application logic.
+        function renderApp() {
+            // Destructure necessary components from the global React and Recharts objects
+            const { useState, useEffect, useMemo, useCallback } = React;
+            const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } = Recharts;
+
+            // The main component for the population chart application.
+            function App() {
+                // Hardcoded CSV data for world population over time.
+                const CSV_DATA = `Entity,Code,Year,Population (historical estimates and future projections)
+World,OWID_WRL,-10000,4501152
+World,OWID_WRL,-9000,5687125
+World,OWID_WRL,-8000,7314623
+World,OWID_WRL,-7000,9651703
+World,OWID_WRL,-6000,13278309
+World,OWID_WRL,-5000,19155698
+World,OWID_WRL,-4000,28859174
+World,OWID_WRL,-3000,44577880
+World,OWID_WRL,-2000,72685064
+World,OWID_WRL,-1000,110530464
+World,OWID_WRL,0,232268832
+World,OWID_WRL,100,237052192
+World,OWID_WRL,200,240762160
+World,OWID_WRL,300,227702848
+World,OWID_WRL,400,241697008
+World,OWID_WRL,500,253395808
+World,OWID_WRL,600,271638944
+World,OWID_WRL,700,278346080
+World,OWID_WRL,800,285870176
+World,OWID_WRL,900,311142688
+World,OWID_WRL,1000,323462624
+World,OWID_WRL,1500,503051104
+World,OWID_WRL,1600,516147616
+World,OWID_WRL,1700,595456896
+World,OWID_WRL,1800,954892352
+World,OWID_WRL,1820,1065623616
+World,OWID_WRL,1830,1148205440
+World,OWID_WRL,1840,1209754496
+World,OWID_WRL,1850,1287033856
+World,OWID_WRL,1950,2493092801
+World,OWID_WRL,1951,2536926981
+World,OWID_WRL,1952,2584086282
+World,OWID_WRL,1953,2634106196
+World,OWID_WRL,1954,2685894824
+World,OWID_WRL,1955,2740213742
+World,OWID_WRL,1960,3015470858
+World,OWID_WRL,1965,3334533671
+World,OWID_WRL,1970,3694683753
+World,OWID_WRL,1975,4070735208
+World,OWID_WRL,1980,4447606162
+World,OWID_WRL,1985,4868943409
+World,OWID_WRL,1990,5327803039
+World,OWID_WRL,1995,5758878939
+World,OWID_WRL,2000,6171702952
+World,OWID_WRL,2005,6586970109
+World,OWID_WRL,2010,7021732097
+World,OWID_WRL,2015,7470491849
+World,OWID_WRL,2020,7887001253
+World,OWID_WRL,2021,7954448327
+World,OWID_WRL,2022,8021407128
+World,OWID_WRL,2023,8091734853
+World,OWID_WRL,2024,8161972496
+World,OWID_WRL,2025,8231613055
+World,OWID_WRL,2030,8569124874
+World,OWID_WRL,2040,9177190161
+World,OWID_WRL,2050,9664378554
+World,OWID_WRL,2060,9989232258
+World,OWID_WRL,2070,10189241908
+World,OWID_WRL,2080,10283077976
+World,OWID_WRL,2090,10271565034
+World,OWID_WRL,2100,10180160680
+`;
+
+                // Constants for chart configuration
+                const END_YEAR = 2025;
+                const INITIAL_Y_MAX = 2e9;
+                const INDUSTRIAL_REVOLUTION_YEAR = 1740;
+
+                // State management
+                const [year, setYear] = useState(-10000);
+                const [isPlaying, setIsPlaying] = useState(false);
+                const [yDomainMax, setYDomainMax] = useState(INITIAL_Y_MAX);
+                const [industrialRevolutionOpacity, setIndustrialRevolutionOpacity] = useState(0);
+                const [captionState, setCaptionState] = useState('earth');
+                const [chartMargins, setChartMargins] = useState({ top: 20, right: 30, left: 50, bottom: 20 });
+
+                useEffect(() => {
+                    const handleResize = () => {
+                        if (window.innerWidth < 768) {
+                            setChartMargins({ top: 10, right: 10, left: -30, bottom: 10 });
+                        } else {
+                            setChartMargins({ top: 20, right: 30, left: 50, bottom: 20 });
+                        }
+                    };
+
+                    window.addEventListener('resize', handleResize);
+                    handleResize(); // Set initial margins
+
+                    return () => window.removeEventListener('resize', handleResize);
+                }, []);
+
+                const captionEarth = useMemo(() => document.getElementById('caption-earth'), []);
+                const captionHistory1 = useMemo(() => document.getElementById('caption-history-1'), []);
+                const captionHistory2 = useMemo(() => document.getElementById('caption-history-2'), []);
+
+                const parseCSV = (csvText) => {
+                    const lines = csvText.trim().split('\n');
+                    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                    const data = [];
+                    for (let i = 1; i < lines.length; i++) {
+                        const values = lines[i].split(',');
+                        const obj = {};
+                        headers.forEach((header, index) => {
+                            let value = values[index] ? values[index].trim() : '';
+                            obj[header] = value;
+                        });
+                        data.push(obj);
+                    }
+                    return data;
+                };
+
+                const formatYAxis = (tickItem) => {
+                    if (tickItem >= 1e9) return `${(tickItem / 1e9).toFixed(0)}B`;
+                    if (tickItem >= 1e6) return `${(tickItem / 1e6).toFixed(0)}M`;
+                    if (tickItem >= 1e3) return `${(tickItem / 1e3).toFixed(0)}K`;
+                    return tickItem.toString();
+                };
+
+                const formatXAxis = (tickItem) => {
+                    const roundedYear = Math.round(tickItem);
+                    if (roundedYear === 0) return '0';
+                    if (roundedYear < 0) return `${Math.abs(roundedYear)} BC`;
+                    return roundedYear.toString();
+                };
+
+                const chartData = useMemo(() => {
+                    const parsedData = parseCSV(CSV_DATA);
+                    return parsedData
+                        .filter(d => d.Entity === 'World' && d['Population (historical estimates and future projections)'] && parseInt(d.Year, 10) <= END_YEAR)
+                        .map(d => ({
+                            year: parseInt(d.Year, 10),
+                            population: parseInt(d['Population (historical estimates and future projections)'], 10)
+                        }))
+                        .sort((a, b) => a.year - b.year);
+                }, []);
+
+                const { minYear, maxYear } = useMemo(() => {
+                    if (!chartData.length) return { minYear: -10000, maxYear: END_YEAR };
+                    return { minYear: chartData[0].year, maxYear: END_YEAR };
+                }, [chartData]);
+
+                const displayedData = useMemo(() => {
+                    if (year <= minYear) return [chartData[0]];
+                    if (year >= maxYear) return chartData.filter(d => d.year <= maxYear);
+
+                    const pastData = chartData.filter(d => d.year <= year);
+                    const nextPoint = chartData.find(d => d.year > year);
+                    const prevPoint = pastData[pastData.length - 1];
+
+                    if (!nextPoint || !prevPoint) return pastData;
+
+                    const yearRange = nextPoint.year - prevPoint.year;
+                    if (yearRange === 0) return pastData;
+
+                    const popRange = nextPoint.population - prevPoint.population;
+                    const progress = (year - prevPoint.year) / yearRange;
+                    const interpolatedPop = prevPoint.population + (popRange * progress);
+
+                    const interpolatedPoint = { year, population: interpolatedPop };
+
+                    return [...pastData, interpolatedPoint];
+                }, [chartData, year, minYear, maxYear]);
+
+                const currentMaxPop = useMemo(() => {
+                    if (!displayedData.length) return 0;
+                    return Math.max(...displayedData.map(d => d.population));
+                }, [displayedData]);
+
+                const yAxisTicks = useMemo(() => {
+                    if (!yDomainMax) return [];
+                    const step = 1e9;
+                    const numLines = Math.floor(yDomainMax / step);
+                    return Array.from({ length: numLines + 1 }, (_, i) => i * step);
+                }, [yDomainMax]);
+
+                const xAxisTicks = useMemo(() => {
+                    const ticks = [];
+                    for (let i = minYear; i <= maxYear; i += 2500) {
+                        ticks.push(i);
+                    }
+                    if (!ticks.includes(0)) ticks.push(0);
+                    if (ticks[ticks.length - 1] > maxYear) ticks.pop();
+                    if (ticks[ticks.length - 1] < maxYear) ticks.push(maxYear);
+                    ticks.sort((a, b) => a - b);
+                    return [...new Set(ticks)];
+                }, [minYear, maxYear]);
+
+                useEffect(() => {
+                    const targetMax = Math.max(INITIAL_Y_MAX, Math.ceil(currentMaxPop / 1e9) * 1e9);
+                    if (targetMax > yDomainMax) {
+                        let animationFrameId;
+                        const animate = () => {
+                            setYDomainMax(prevMax => {
+                                const diff = targetMax - prevMax;
+                                if (diff < 1000) {
+                                    cancelAnimationFrame(animationFrameId);
+                                    return targetMax;
+                                }
+                                const nextMax = prevMax + diff * 0.05;
+                                animationFrameId = requestAnimationFrame(animate);
+                                return nextMax;
+                            });
+                        };
+                        animationFrameId = requestAnimationFrame(animate);
+                        return () => cancelAnimationFrame(animationFrameId);
+                    }
+                }, [currentMaxPop, yDomainMax]);
+
+                useEffect(() => {
+                    if (isPlaying) {
+                        const interval = setInterval(() => {
+                            setYear(prevYear => {
+                                const increment = prevYear < 1800 ? 30 : 1;
+                                const nextYear = prevYear + increment;
+                                if (nextYear >= maxYear) {
+                                    setIsPlaying(false);
+                                    return maxYear;
+                                }
+                                return nextYear;
+                            });
+                        }, 25);
+                        return () => clearInterval(interval);
+                    }
+                }, [isPlaying, maxYear]);
+
+                useEffect(() => {
+                    if (year >= INDUSTRIAL_REVOLUTION_YEAR) {
+                        if (industrialRevolutionOpacity < 1) {
+                            let animationFrameId;
+                            const animate = () => {
+                                setIndustrialRevolutionOpacity(prevOpacity => {
+                                    const nextOpacity = prevOpacity + 0.02;
+                                    if (nextOpacity >= 1) {
+                                        cancelAnimationFrame(animationFrameId);
+                                        return 1;
+                                    }
+                                    animationFrameId = requestAnimationFrame(animate);
+                                    return nextOpacity;
+                                });
+                            };
+                            animationFrameId = requestAnimationFrame(animate);
+                            return () => cancelAnimationFrame(animationFrameId);
+                        }
+                        if (captionState === 'history1') {
+                            setCaptionState('history2');
+                            gsap.to(captionHistory1, { opacity: 0, duration: 0.5, ease: "power2.in" });
+                            gsap.to(captionHistory2, { opacity: 0.6, duration: 0.5, ease: "power2.out", delay: 0.5 });
+                        }
+                    } else if (year < INDUSTRIAL_REVOLUTION_YEAR && industrialRevolutionOpacity > 0) {
+                        setIndustrialRevolutionOpacity(0);
+                    }
+                }, [year, industrialRevolutionOpacity, captionState, captionHistory1, captionHistory2]);
+
+                const handlePlayPause = useCallback(() => {
+                    if (year >= maxYear) { // Replay
+                        setYear(minYear);
+                        setYDomainMax(INITIAL_Y_MAX);
+                        setIndustrialRevolutionOpacity(0);
+                        setCaptionState('earth');
+                        gsap.to(captionHistory2, { opacity: 0, duration: 0.5, ease: "power2.in" });
+                        gsap.to(captionEarth, { opacity: 0.6, duration: 0.5, ease: "power2.out", delay: 0.5 });
+                    } else { // Play/Pause
+                        if (!isPlaying && captionState === 'earth') {
+                            setCaptionState('history1');
+                            gsap.to(captionEarth, { opacity: 0, duration: 0.5, ease: "power2.in" });
+                            gsap.to(captionHistory1, { opacity: 0.6, duration: 0.5, ease: "power2.out", delay: 0.5 });
+                        }
+                        setIsPlaying(prev => !prev);
+                    }
+                }, [isPlaying, year, maxYear, captionState, captionEarth, captionHistory1, captionHistory2]);
+
+                const handleSliderChange = (e) => {
+                    const newYear = parseInt(e.target.value, 10);
+                    setYear(newYear);
+                    if (isPlaying) setIsPlaying(false);
+                    const maxPopAtYear = Math.max(1, ...chartData.filter(d => d.year <= newYear).map(d => d.population));
+                    const targetMax = Math.max(INITIAL_Y_MAX, Math.ceil(maxPopAtYear / 1e9) * 1e9);
+                    setYDomainMax(targetMax);
+                };
+
+                const CustomTooltip = ({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                        return (
+                            <div className="p-4 bg-white/80 backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg">
+                                <p className="font-bold text-gray-800">{`Year: ${formatXAxis(label)}`}</p>
+                                <div style={{ color: '#8884d8' }}>
+                                    <span className="font-semibold text-gray-700">Population: </span>
+                                    <span className="font-mono text-gray-900">{`${Math.round(payload[0].value).toLocaleString()}`}</span>
+                                </div>
+                            </div>
+                        );
+                    }
+                    return null;
+                };
+
+                return (
+                    <div className="bg-transparent text-white min-h-screen p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between font-sans">
+                        <header className="w-full max-w-7xl text-center">
+                            <h1 className="text-2xl sm:text-4xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-500">
+                                World Population Growth
+                            </h1>
+                            <p className="text-gray-400 mt-2">10,000 BC to {END_YEAR} AD</p>
+                        </header>
+
+                        <div className="w-full max-w-7xl h-[60vh] md:h-[70vh] p-0 sm:p-4">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart
+                                    data={displayedData}
+                                    margin={chartMargins}
+                                >
+                                    <defs>
+                                        <linearGradient id="colorPopulation" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(74, 85, 104, 0.5)" />
+                                    <XAxis 
+                                        dataKey="year" 
+                                        stroke="#A0AEC0" 
+                                        tick={{ fill: '#A0AEC0', className: 'text-sm' }}
+                                        domain={[minYear, maxYear]}
+                                        type="number"
+                                        ticks={xAxisTicks}
+                                        tickFormatter={formatXAxis}
+                                    />
+                                    <YAxis 
+                                        stroke="#A0AEC0"
+                                        tick={{ fill: '#A0AEC0', className: 'text-sm' }}
+                                        tickFormatter={formatYAxis}
+                                        domain={[0, yDomainMax]}
+                                        allowDataOverflow={true}
+                                        type="number"
+                                        ticks={yAxisTicks}
+                                    />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <ReferenceLine x={0} stroke="rgba(74, 85, 104, 0.5)" strokeDasharray="3 3" />
+                                    
+                                    <ReferenceLine 
+                                        x={INDUSTRIAL_REVOLUTION_YEAR} 
+                                        stroke="#38B2AC" 
+                                        strokeDasharray="4 4"
+                                        strokeOpacity={industrialRevolutionOpacity}
+                                    >
+                                        <Label 
+                                            value="Industrial Revolution" 
+                                            position="top"
+                                            fill="#38B2AC" 
+                                            fontSize={16}
+                                            angle={-90}
+                                            offset={40}
+                                            style={{ textAnchor: 'end', fillOpacity: industrialRevolutionOpacity }}
+                                        />
+                                    </ReferenceLine>
+
+                                    <Area
+                                        type="monotone"
+                                        dataKey="population"
+                                        name="World Population"
+                                        stroke="#8884d8"
+                                        fillOpacity={1}
+                                        fill="url(#colorPopulation)"
+                                        strokeWidth={2}
+                                        isAnimationActive={false}
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <footer className="w-full max-w-4xl">
+                            <div className="p-2 bg-gray-800/50 rounded-xl shadow-lg border border-gray-700">
+                                <div className="flex items-center justify-center space-x-4">
+                                    <button
+                                        onClick={handlePlayPause}
+                                        className="px-4 py-1 rounded-lg bg-sky-400 hover:bg-sky-500 text-white font-semibold opacity-80 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center"
+                                    >
+                                        {isPlaying ? (
+                                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"></path></svg>
+                                        ) : (
+                                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6V4z"></path></svg>
+                                        )}
+                                        {isPlaying ? 'Pause' : (year >= maxYear ? 'Replay' : 'Play')}
+                                    </button>
+                                    <div className="flex-grow flex items-center space-x-4">
+                                        <span className="text-gray-400 text-sm font-mono w-20 text-center">{formatXAxis(minYear)}</span>
+                                        <input
+                                            type="range"
+                                            min={minYear}
+                                            max={maxYear}
+                                            step="10"
+                                            value={year}
+                                            onChange={handleSliderChange}
+                                            className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                                        />
+                                         <span className="text-gray-400 text-sm font-mono w-20 text-center">{formatXAxis(maxYear)}</span>
+                                    </div>
+                                     <span className="text-base font-bold text-sky-400 w-28 text-center">{formatXAxis(year)}</span>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                );
+            }
+            
+            // Render the React application into the 'root' div
+            ReactDOM.render(<App />, document.getElementById('root'));
+        };
+        // Call the renderApp function to initialize the application
+        renderApp()
+    </script>
+</body>
+</html>
